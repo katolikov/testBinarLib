@@ -2,7 +2,7 @@
 Производительность библиотек сериализации: двоичных форматов
 
 ## Тест №1
-Тест ifstream (std::ios::binary) -> read 
+Тест **ifstream** (std::ios::binary) -> read 
 ```
 Test READ FROM FILE: 
 FILE SIZE: 10GB
