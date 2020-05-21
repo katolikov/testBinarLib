@@ -9,18 +9,27 @@ int main(int argc, char* argv[]){
 
     std::cout << "Test READ FROM FILE: \nFILE SIZE: 10GB\n";
 
-    std::ifstream binaryFile (argv[1], std::ios::in | std::ios::binary);
+    std::ifstream binaryFileIn (argv[1], std::ios::in | std::ios::binary);
 
-    if(!binaryFile){
+    std::ofstream binaryFileOut (argv[1], std::ios::in | std::ios::binary);
+
+    if(!binaryFileIn){
         std::cerr << "Cannot open file!\n";
         return 1;
     }
 
-    auto startFirst = std::chrono::system_clock::now();
+    auto startFirstRead = std::chrono::system_clock::now();
 
-    binaryFile.read(buffer, size); //check first
+    binaryFileIn.read(buffer, size); //check first
 
-    auto endFirst = std::chrono::system_clock::now();
+    auto endFirstRead = std::chrono::system_clock::now();
+
+
+    auto startFirstWrite = std::chrono::system_clock::now();
+
+    binaryFileOut.write(buffer, size); //check first
+
+    auto endFirstWrite = std::chrono::system_clock::now();
 
     auto startSecond = std::chrono::system_clock::now();
 
@@ -28,14 +37,19 @@ int main(int argc, char* argv[]){
 
     auto endSecond= std::chrono::system_clock::now();
 
-    std::chrono::duration<double> firstTime = endFirst-startFirst;
+    std::chrono::duration<double> firstTimeRead = endFirstRead-startFirstRead;
+    std::chrono::duration<double> firstTimeWrite = endFirstWrite-startFirstWrite;
+
     std::chrono::duration<double> secondTime = endSecond-startSecond;
 
-    binaryFile.close();
+    binaryFileIn.close();
+    binaryFileOut.close();
 
-    std::cout << "First check: " << firstTime.count() << "\n";
+    std::cout << "First check READ: " << firstTimeRead.count() << "\n";
 
-    std::cout << "Second check: " << secondTime.count() << "\n";
+    std::cout << "First check WRITE: " << firstTimeWrite.count() << "\n";
+
+    //std::cout << "Second check: " << secondTime.count() << "\n";
 
 	return 0;
 }
