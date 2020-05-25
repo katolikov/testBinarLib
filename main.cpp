@@ -2,6 +2,7 @@
 #include <fstream>
 #include <chrono>
 #include <msgpack.hpp>
+#include <cbor.h>
 
 int main(int argc, char* argv[]){
 
@@ -28,32 +29,24 @@ int main(int argc, char* argv[]){
 
     auto endFirstRead = std::chrono::system_clock::now();
 
+    //struct cbor_load_result result;
 
-    auto startFirstWrite = std::chrono::system_clock::now();
-
-    //Some check function
-
-    auto endFirstWrite = std::chrono::system_clock::now();
-
-    auto startSecond = std::chrono::system_clock::now();
+    auto startSecondRead = std::chrono::system_clock::now();
 
     //Some check function
 
-    auto endSecond= std::chrono::system_clock::now();
+    auto endSecondRead = std::chrono::system_clock::now();
+
 
     std::chrono::duration<double> firstTimeRead = endFirstRead-startFirstRead;
 
-    //std::chrono::duration<double> firstTimeWrite = endFirstWrite-startFirstWrite;
-
-    //std::chrono::duration<double> secondTime = endSecond-startSecond;
+    std::chrono::duration<double> SecondTimeRead = endSecondRead - startSecondRead;
 
     binaryFileIn.close();
-    //binaryFileOut.close();
 
-    std::cout << "First check READ: " << firstTimeRead.count() << "\n";
+    std::cout << "READ -> msgpack test: " << firstTimeRead.count() << "\n";
 
-    //std::cout << "First check WRITE: " << firstTimeWrite.count() << "\n";
+    std::cout << "READ -> libcbor test: " << SecondTimeRead.count() << "\n";
 
-    //std::cout << "Second check: " << secondTime.count() << "\n";
     return 0;
 }
