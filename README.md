@@ -7,7 +7,7 @@
 ```
 Test READ FROM FILE: 
 FILE SIZE: 1GB
-READ -> msgpack: 0.000256
+READ -> msgpack test: 0.000256
 ```
 
 ## Тест №2
