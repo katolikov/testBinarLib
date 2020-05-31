@@ -34,7 +34,6 @@ int main(int argc, char *argv[]) {
 
     auto endFirstRead = std::chrono::system_clock::now();
 
-
     auto startSecondRead = std::chrono::system_clock::now();
 
     libbsoncpp::reader::read_from_file(argv[1]);

@@ -15,7 +15,14 @@ namespace libbsoncpp {
     public:
         static auto read_from_file(const char *filename) {
             bson_error_t error;
-            return bson_reader_new_from_file(filename, &error);
+            auto reader = bson_reader_new_from_file(filename, &error);
+
+            if (!reader) {
+                std::cout << error.message;
+            }
+
+            return reader;
+
         }
     };
 }
