@@ -12,10 +12,6 @@ namespace MsgPack {
 
     class Reader {
 
-        Reader() = default;
-
-        ~Reader() = default;
-
     public:
         static auto read_from_file(const std::string &filename) {
 
@@ -29,15 +25,7 @@ namespace MsgPack {
 
             binaryFileIn.close();
 
-            msgpack::object_handle oh = msgpack::unpack(buffer.data(), buffer.size());
-
-            msgpack::object deserialized = oh.get();
-
-            std::stringstream buffer_new;
-            buffer_new << deserialized;
-
-            return buffer_new;
-
+            return msgpack::unpack(buffer.data(), buffer.size());
         }
 
         static auto read_from_buffer(std::string buffer) {
@@ -48,13 +36,11 @@ namespace MsgPack {
     class Writer {
 
     public:
-        static auto write_to_buffer(std::string buffer) {
+        static auto write_to_buffer(msgpack::object buffer) {
 
-            msgpack::type::tuple<std::string> buffer_data(buffer.data());
             std::stringstream buffer_new;
-            msgpack::pack(buffer_new, buffer_data);
 
-            buffer_new.seekg(0);
+            msgpack::pack(buffer_new, std::make_tuple(buffer));
 
             return buffer_new;
         }

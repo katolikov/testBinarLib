@@ -13,47 +13,41 @@ namespace LibBsonCpp {
 
     class Reader {
 
+    public:
+
+        //static bson_reader_t *reader;
+
         Reader() = default;
 
-        ~Reader() = default;
+        ~Reader() {
+            //bson_reader_destroy(reader);
+        }
 
-    public:
         static auto read_from_file_deserialization(const std::string &filename) {
 
             bson_error_t error;
+
+            //bson_reader_t *reader;
 
             auto reader = bson_reader_new_from_file(filename.c_str(), &error);
 
             if (!reader) {
                 std::cout << error.message;
             }
-
-            auto doc = bson_reader_read(reader, nullptr);
-
-            std::string str = bson_as_canonical_extended_json(doc, nullptr);
-
-            return str;
+            return bson_reader_read(reader, nullptr);
         }
     };
 
     class Writer {
-
-    private:
-        Writer() = default;
-
-        ~Writer() = default;
 
     public:
         static auto serialization(std::string json) {
 
             bson_error_t error;
 
-            auto bson = bson_new_from_json(reinterpret_cast<const uint8_t *>(json.data()), json.size(), &error);
+            bson_new_from_json(reinterpret_cast<const uint8_t *>(json.data()), json.size(), &error);
 
-            if (!bson) {
-                std::cout << error.message;
-            }
-            bson_destroy(bson);
+            std::cout << error.message;
         }
     };
 }
