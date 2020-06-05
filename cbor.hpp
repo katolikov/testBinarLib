@@ -17,19 +17,15 @@ namespace Cbor {
 
             std::ifstream binaryFileIn(filename, std::ios::in | std::ios::binary);
 
-            std::string buffer((std::istreambuf_iterator<char>(binaryFileIn)), std::istreambuf_iterator<char>());
-
-            if (!binaryFileIn) {
-                std::cerr << "Cannot open file!\n";
-            }
+            std::string buffer((std::istreambuf_iterator<char>(binaryFileIn)),
+                               std::istreambuf_iterator<char>());
 
             binaryFileIn.close();
 
             struct cbor_load_result result{};
 
-            std::cout << "error";
-
-            return cbor_load(reinterpret_cast<cbor_data>(buffer.data()), buffer.size(), &result);
+            return cbor_load(reinterpret_cast<unsigned char *>(buffer.data()),
+                             buffer.size(), &result);
         }
     };
 
@@ -37,8 +33,9 @@ namespace Cbor {
 
     public:
         static auto write_to_buffer(const cbor_item_t *item) {
-            std::string buffer;
-            cbor_serialize(item, reinterpret_cast<cbor_mutable_data>(buffer.data()), buffer.size());
+            std::string buffer = nullptr;
+            cbor_serialize(item, reinterpret_cast<unsigned char *>(buffer.data()),
+                           buffer.size());
             return buffer;
         }
     };

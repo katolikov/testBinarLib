@@ -19,22 +19,14 @@ namespace LibBsonCpp {
 
         Reader() = default;
 
-        ~Reader() {
-            //bson_reader_destroy(reader);
-        }
+        ~Reader() = default;
 
         static auto read_from_file_deserialization(const std::string &filename) {
 
             bson_error_t error;
 
-            //bson_reader_t *reader;
-
-            auto reader = bson_reader_new_from_file(filename.c_str(), &error);
-
-            if (!reader) {
-                std::cout << error.message;
-            }
-            return bson_reader_read(reader, nullptr);
+            return bson_reader_read(bson_reader_new_from_file(filename.c_str(),
+                                                              &error), nullptr);
         }
     };
 
@@ -45,9 +37,9 @@ namespace LibBsonCpp {
 
             bson_error_t error;
 
-            bson_new_from_json(reinterpret_cast<const uint8_t *>(json.data()), json.size(), &error);
+            return bson_new_from_json(reinterpret_cast<const uint8_t *>(json.data()),
+                                      json.size(), &error);
 
-            std::cout << error.message;
         }
     };
 }

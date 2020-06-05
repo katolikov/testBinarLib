@@ -17,11 +17,8 @@ namespace MsgPack {
 
             std::ifstream binaryFileIn(filename, std::ios::in | std::ios::binary);
 
-            std::string buffer((std::istreambuf_iterator<char>(binaryFileIn)), std::istreambuf_iterator<char>());
-
-            if (!binaryFileIn) {
-                std::cerr << "Cannot open file!\n";
-            }
+            std::string buffer((std::istreambuf_iterator<char>(binaryFileIn)),
+                               std::istreambuf_iterator<char>());
 
             binaryFileIn.close();
 
@@ -36,11 +33,11 @@ namespace MsgPack {
     class Writer {
 
     public:
-        static auto write_to_buffer(msgpack::object buffer) {
+        static auto write_to_buffer(const msgpack::type::tuple<std::string> &wrt) {
 
             std::stringstream buffer_new;
 
-            msgpack::pack(buffer_new, std::make_tuple(buffer));
+            msgpack::pack(buffer_new, wrt);
 
             return buffer_new;
         }
