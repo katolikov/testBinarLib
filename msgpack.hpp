@@ -15,18 +15,22 @@ namespace MsgPack {
     public:
         static auto read_from_file(const std::string &filename) {
 
-            std::ifstream binaryFileIn(filename, std::ios::in | std::ios::binary);
+            std::ifstream binaryFileIn(filename, std::ios::in);
 
             std::string buffer((std::istreambuf_iterator<char>(binaryFileIn)),
                                std::istreambuf_iterator<char>());
 
             binaryFileIn.close();
 
-            return msgpack::unpack(buffer.data(), buffer.size());
-        }
+            msgpack::unpacker wrt;
 
-        static auto read_from_buffer(std::string buffer) {
-            return msgpack::unpack(buffer.data(), buffer.size());
+            wrt.reserve_buffer(buffer.size());
+
+            std::copy(buffer.begin(), buffer.end(), wrt.buffer());
+
+            wrt.buffer_consumed(buffer.size());
+
+            return wrt;
         }
     };
 

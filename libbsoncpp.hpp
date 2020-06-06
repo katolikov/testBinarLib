@@ -21,7 +21,7 @@ namespace LibBsonCpp {
 
         ~Reader() = default;
 
-        static auto read_from_file_deserialization(const std::string &filename) {
+        static auto read_from_file(const std::string &filename) {
 
             bson_error_t error;
 
@@ -33,10 +33,10 @@ namespace LibBsonCpp {
     class Writer {
 
     public:
-        static auto serialization(std::string json) {
+        static auto write_to_buffer(std::string json) {
 
             bson_error_t error;
-
+            //decode переделать
             return bson_new_from_json(reinterpret_cast<const uint8_t *>(json.data()),
                                       json.size(), &error);
 

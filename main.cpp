@@ -5,27 +5,27 @@
 #include "libbsoncpp.hpp"
 #include "cbor.hpp"
 
-auto desirilization_msg(const std::string &msgpack_file) {
+auto deserialization_msg(const std::string &msgpack_file) {
     return MsgPack::Reader::read_from_file(msgpack_file);
 }
 
-auto sirilization_msg(const msgpack::type::tuple<std::string> reader) {
+auto serialization_msg(const msgpack::type::tuple<std::string> &reader) {
     return MsgPack::Writer::write_to_buffer(reader);
 }
 
-auto desirilization_bson(const std::string &bson) {
-    return LibBsonCpp::Reader::read_from_file_deserialization(bson);
+auto deserialization_bson(const std::string &bson) {
+    return LibBsonCpp::Reader::read_from_file(bson);
 }
 
-auto sirilization_bson(const std::string &str) {
-    return LibBsonCpp::Writer::serialization(str);
+auto serialization_bson(const std::string &str) {
+    return LibBsonCpp::Writer::write_to_buffer(str);
 }
 
-/*auto desirilization_cbor(const std::string &cbor) {
+/*auto dserialization_cbor(const std::string &cbor) {
     return Cbor::Reader::read_from_file(cbor);
 }
 
-auto sirilization_cbor(const cbor_item_t *item) {
+auto serialization_cbor(const cbor_item_t *item) {
     Cbor::Writer::write_to_buffer(item);
 }*/
 
@@ -41,41 +41,47 @@ int main(int argc, char *argv[]) {
 
     //Десерилизация из файла
 
-    COLLECT_METRIC("msgpack", "msgpack", "deserilization", 5000) {
-            benchmark::doNotOptimizeAway(desirilization_msg(msgpack));
+    COLLECT_METRIC("msgpack", "msgpack", "deserilization", 5) {
+            benchmark::doNotOptimizeAway(deserialization_msg(msgpack));
         }
 
-    auto reader_handel = desirilization_msg(msgpack);
-    auto reader = reader_handel.get();
+    auto pac = deserialization_msg(msgpack);
+
+    msgpack::object_handle oh;
 
     std::stringstream buffer;
 
-    buffer << reader;
+    while (pac.next(oh)) {
+        msgpack::object msg = oh.get();
+        buffer << msg << std::endl;
+    }
 
     //Серилизация в буффер
 
 
-    COLLECT_METRIC("msgpack", "msgpack", "serilization", 5000) {
-            benchmark::doNotOptimizeAway(sirilization_msg(msgpack::type::tuple<std::string>(buffer.str())));
+    COLLECT_METRIC("msgpack", "msgpack", "serilization", 5) {
+            benchmark::doNotOptimizeAway(serialization_msg(msgpack::type::tuple<std::string>(buffer.str())));
         }
 
-    auto buffer_out = sirilization_msg(msgpack::type::tuple<std::string>(buffer.str()));
+    //auto buffer_out = sirilization_msg(msgpack::type::tuple<std::string>(buffer.str()));
+
+    //std::cout << buffer_out.str();
 
     //Десерилизация из файла
 
-    COLLECT_METRIC("bson", "libson", "deserilization", 5000) {
-            benchmark::doNotOptimizeAway(desirilization_bson(bson));
+    COLLECT_METRIC("bson", "libson", "deserilization", 5) {
+            benchmark::doNotOptimizeAway(deserialization_bson(bson));
         }
 
-    auto doc = desirilization_bson(bson);
+    auto doc = deserialization_bson(bson);
 
 
     std::string str = bson_as_canonical_extended_json(doc, nullptr);
 
     //Серилизация в буффер
 
-    COLLECT_METRIC("bson", "libbson", "serilization", 5000) {
-            benchmark::doNotOptimizeAway(sirilization_bson(str));
+    COLLECT_METRIC("bson", "libbson", "serilization", 5) {
+            benchmark::doNotOptimizeAway(serialization_bson(str));
         }
 
     //sirilization_bson(str);

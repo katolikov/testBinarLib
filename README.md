@@ -1,34 +1,38 @@
 # Тестирование библиотек
 Производительность библиотек сериализации: двоичных форматов
 
-## Тест №1
-### Msgpack
-Тест **msgpack::unpack**
+## TEST №1
+### msgpack
+Test **deserialization**
 ```
-TEST READ FROM FILE: 
-READ FROM FILE -> msgpack test: 0.001359
-```
-
-Тест **msgpack::pack**
-```
-WRITE TO BUFFER -> msgpack test: 6e-06
+DESERILIZATION: 
+FORMAT FILE: messagepack
+FILE SIZE: 800 mb
+msgpack test: 34.9128
 ```
 
-Тест **msgpack::unpack**
+Test **serialization**
 ```
-TEST READ FROM BUFFER: 
-READ FROM BUFFER -> msgpack test: 1.1e-05
+SERILIZATION: 
+FORMAT FILE: messagepack 
+FILE SIZE: 800 mb
+msgpack test: 64.2532
 ```
 
-## Тест №2
+## TEST №2
 ### libbson
-Тест **libbson::read_from_file_deserialization**
+Test **deserialization**
 ```
-TEST READ FROM FILE: 
-READ FROM FILE -> libbson test: 0.000608
+DESERILIZATION:
+FORMAT FILE: bson 
+FILE SIZE: 800 mb
+libbson test: 0.033449
 ```
 
-Тест **libbson::cerialization**
+Test **serialization**
 ```
-WRITE TO BUFFER -> libbson test: 0.000238
+SERILIZATION:
+FORMAT FILE: bson 
+FILE SIZE: 800 mb
+libbson test: 0.063428
 ```
