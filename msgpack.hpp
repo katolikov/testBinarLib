@@ -8,42 +8,27 @@
 #include <msgpack.hpp>
 #include <sstream>
 
-namespace MsgPack {
+namespace msgpackcpp {
 
-    class Reader {
+    class reader {
 
     public:
-        static auto read_from_file(const std::string &filename) {
+        static auto read_from_buffer(std::string buffer) {
 
-            std::ifstream binaryFileIn(filename, std::ios::in);
-
-            std::string buffer((std::istreambuf_iterator<char>(binaryFileIn)),
-                               std::istreambuf_iterator<char>());
-
-            binaryFileIn.close();
-
-            msgpack::unpacker wrt;
-
-            wrt.reserve_buffer(buffer.size());
-
-            std::copy(buffer.begin(), buffer.end(), wrt.buffer());
-
-            wrt.buffer_consumed(buffer.size());
-
-            return wrt;
+            return msgpack::unpack(buffer.data(), buffer.size());
         }
     };
 
-    class Writer {
+    class writer {
 
     public:
         static auto write_to_buffer(const msgpack::type::tuple<std::string> &wrt) {
 
-            std::stringstream buffer_new;
+            std::stringstream buffer_out;
 
-            msgpack::pack(buffer_new, wrt);
+            msgpack::pack(buffer_out, wrt);
 
-            return buffer_new;
+            return buffer_out;
         }
     };
 }

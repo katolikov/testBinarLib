@@ -8,32 +8,26 @@
 #include <iostream>
 #include <memory>
 
-namespace Cbor {
+namespace cborcpp {
 
-    class Reader {
+    class reader {
 
     public:
-        static auto read_from_file(const std::string &filename) {
-
-            std::ifstream binaryFileIn(filename, std::ios::in | std::ios::binary);
-
-            std::string buffer((std::istreambuf_iterator<char>(binaryFileIn)),
-                               std::istreambuf_iterator<char>());
-
-            binaryFileIn.close();
+        static auto read_from_buffer(const std::string &buffer) {
 
             struct cbor_load_result result{};
 
-            return cbor_load(reinterpret_cast<unsigned char *>(buffer.data()),
-                             buffer.size(), &result);
+            return cbor_load(reinterpret_cast<const unsigned char *>(buffer.data()), buffer.size(), &result);
         }
     };
 
-    class Writer {
+    class writer {
 
     public:
         static auto write_to_buffer(const cbor_item_t *item) {
-            std::string buffer = nullptr;
+
+            std::string buffer;
+
             cbor_serialize(item, reinterpret_cast<unsigned char *>(buffer.data()),
                            buffer.size());
             return buffer;
