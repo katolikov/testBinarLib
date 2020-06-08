@@ -1,6 +1,7 @@
 //
 // Created by Артем Католиков on 04.06.2020.
 //
+
 #ifndef TESTBINARLIB_CBOR_HPP
 #define TESTBINARLIB_CBOR_HPP
 

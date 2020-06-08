@@ -4,7 +4,7 @@ project(testBinarLib)
 
 set(CMAKE_CXX_STANDARD 20)
 
-add_executable(testBinarLib main.cpp libbsoncpp.hpp msgpack.hpp cbor.hpp)
+add_executable(testBinarLib main.cpp bson.hpp msgpack.hpp cbor.hpp)
 
 find_package(PkgConfig REQUIRED)
 find_package(msgpack REQUIRED)

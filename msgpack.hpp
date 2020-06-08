@@ -13,7 +13,7 @@ namespace msgpackcpp {
     class reader {
 
     public:
-        static auto read_from_buffer(std::string buffer) {
+        static auto read_from_buffer(const std::string &buffer) {
 
             return msgpack::unpack(buffer.data(), buffer.size());
         }
