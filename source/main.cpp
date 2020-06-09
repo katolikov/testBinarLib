@@ -1,9 +1,9 @@
 #include <iostream>
 #include <fstream>
 #include <benchmark/benchmark.h>
-#include "msgpack.hpp"
-#include "bson.hpp"
-#include "cbor.hpp"
+#include "../include/msgpack.hpp"
+#include "../include/bson.hpp"
+#include "../include/cbor.hpp"
 
 auto deserialization_msg(const std::string &msgpack_file) {
     return msgpackcpp::reader::read_from_buffer(msgpack_file);
@@ -29,7 +29,7 @@ auto BM_test_msg_deser(benchmark::State &state) {
 
     // Perform setup
 
-    std::ifstream msgpack_file("./msgpack.msgpack", std::ios::in);
+    std::ifstream msgpack_file("msgpack.msgpack", std::ios::in);
 
     std::string buffer_msg((std::istreambuf_iterator<char>(msgpack_file)),
                            std::istreambuf_iterator<char>());
@@ -46,7 +46,7 @@ auto BM_test_msg_ser(benchmark::State &state) {
 
     // Perform setup
 
-    std::ifstream msgpack_file("./msgpack.msgpack", std::ios::in);
+    std::ifstream msgpack_file("msgpack.msgpack", std::ios::in);
 
     std::string buffer_msg((std::istreambuf_iterator<char>(msgpack_file)),
                            std::istreambuf_iterator<char>());
@@ -63,7 +63,7 @@ auto BM_test_bson_deser(benchmark::State &state) {
 
     // Perform setup
 
-    std::ifstream bson_file("./bson.bson", std::ios::in);
+    std::ifstream bson_file("bson.bson", std::ios::in);
 
     std::string buffer_bson((std::istreambuf_iterator<char>(bson_file)),
                             std::istreambuf_iterator<char>());
@@ -79,7 +79,7 @@ auto BM_test_cbor_deser(benchmark::State &state) {
 
     // Perform setup
 
-    std::ifstream cbor_file("./cbor.cbor", std::ios::in);
+    std::ifstream cbor_file("cbor.cbor", std::ios::in);
 
     std::string buffer_cbor((std::istreambuf_iterator<char>(cbor_file)),
                             std::istreambuf_iterator<char>());
@@ -95,7 +95,7 @@ auto BM_test_cbor_ser(benchmark::State &state) {
 
     // Perform setup
 
-    std::ifstream cbor_file("./cbor.cbor", std::ios::in);
+    std::ifstream cbor_file("cbor.cbor", std::ios::in);
 
     std::string buffer_cbor((std::istreambuf_iterator<char>(cbor_file)),
                             std::istreambuf_iterator<char>());

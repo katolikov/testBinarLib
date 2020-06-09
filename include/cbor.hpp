@@ -18,7 +18,8 @@ namespace cborcpp {
 
             struct cbor_load_result result{};
 
-            return cbor_load(reinterpret_cast<const unsigned char *>(buffer.data()), buffer.size(), &result);
+            return cbor_load(reinterpret_cast<const unsigned char *>(buffer.data()),
+                             buffer.size(), &result);
         }
     };
 
