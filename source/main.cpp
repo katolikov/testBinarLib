@@ -21,7 +21,7 @@ auto deserialization_cbor(const std::string &cbor) {
     return cborcpp::reader::read_from_buffer(cbor);
 }
 
-auto serialization_cbor(const cbor_item_t *item) {
+auto serialization_cbor(cbor_item_t *item) {
     cborcpp::writer::write_to_buffer(item);
 }
 
@@ -107,6 +107,9 @@ auto BM_test_cbor_ser(benchmark::State &state) {
         // This code gets timed
         serialization_cbor(item);
     }
+
+    cbor_decref(&item);
+
 }
 
 // Register the function as a benchmark
