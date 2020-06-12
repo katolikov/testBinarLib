@@ -15,7 +15,13 @@ namespace msgpackcpp {
     public:
         static auto read_from_buffer(const std::string &buffer) {
 
-            return msgpack::unpack(buffer.data(), buffer.size());
+            msgpack::unpacked upd;
+
+            std::size_t offset = 0;
+
+            msgpack::unpack(upd, buffer.data(), buffer.size(), offset);
+
+            return upd;
         }
     };
 

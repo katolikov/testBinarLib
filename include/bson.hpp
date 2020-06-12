@@ -15,9 +15,9 @@ namespace bsoncpp {
 
     public:
 
-        static auto read_from_buffer(const std::string &buffer) {
-            bson_validate(bson_reader_read(bson_reader_new_from_data(reinterpret_cast<const uint8_t *>(buffer.c_str()),
-                                                                     buffer.size()), nullptr), BSON_VALIDATE_NONE,
+        static auto read_from_buffer(size_t length, std::vector<const uint8_t> &uint8_t_v) {
+            bson_validate(bson_reader_read(bson_reader_new_from_data(&uint8_t_v[0],
+                                                                     length), nullptr), BSON_VALIDATE_NONE,
                           nullptr);
         }
     };

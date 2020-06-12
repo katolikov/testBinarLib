@@ -5,31 +5,12 @@
 #include "../include/bson.hpp"
 #include "../include/cbor.hpp"
 
-auto deserialization_msg(const std::string &msgpack_file) {
-    return msgpackcpp::reader::read_from_buffer(msgpack_file);
-}
-
-auto serialization_msg(const msgpack::type::tuple<std::string> &reader) {
-    return msgpackcpp::writer::write_to_buffer(reader);
-}
-
-auto deserialization_bson(const std::string &buffer) {
-    return bsoncpp::reader::read_from_buffer(buffer);
-}
-
-auto deserialization_cbor(const std::string &cbor) {
-    return cborcpp::reader::read_from_buffer(cbor);
-}
-
-auto serialization_cbor(cbor_item_t *item) {
-    cborcpp::writer::write_to_buffer(item);
-}
 
 auto BM_test_msg_deser(benchmark::State &state) {
 
     // Perform setup
 
-    std::ifstream msgpack_file("msgpack.msgpack", std::ios::in);
+    std::ifstream msgpack_file("msgpack_new.msgpack", std::ios::in);
 
     std::string buffer_msg((std::istreambuf_iterator<char>(msgpack_file)),
                            std::istreambuf_iterator<char>());
@@ -38,7 +19,7 @@ auto BM_test_msg_deser(benchmark::State &state) {
     for (auto _ : state) {
 
         // This code gets timed
-        deserialization_msg(buffer_msg);
+        msgpackcpp::reader::read_from_buffer(buffer_msg);
     }
 }
 
@@ -46,7 +27,7 @@ auto BM_test_msg_ser(benchmark::State &state) {
 
     // Perform setup
 
-    std::ifstream msgpack_file("msgpack.msgpack", std::ios::in);
+    std::ifstream msgpack_file("msgpack_new.msgpack", std::ios::in);
 
     std::string buffer_msg((std::istreambuf_iterator<char>(msgpack_file)),
                            std::istreambuf_iterator<char>());
@@ -55,7 +36,8 @@ auto BM_test_msg_ser(benchmark::State &state) {
     for (auto _ : state) {
 
         // This code gets timed
-        serialization_msg(msgpack::type::tuple<std::string>(buffer_msg.data()));
+        msgpackcpp::writer::write_to_buffer(
+                msgpack::type::tuple<std::string>(buffer_msg.data()));
     }
 }
 
@@ -63,15 +45,18 @@ auto BM_test_bson_deser(benchmark::State &state) {
 
     // Perform setup
 
-    std::ifstream bson_file("bson.bson", std::ios::in);
+    std::ifstream bson_file("bson_new.bson", std::ios::in);
 
     std::string buffer_bson((std::istreambuf_iterator<char>(bson_file)),
                             std::istreambuf_iterator<char>());
     bson_file.close();
 
+    std::vector<const uint8_t> uint8_t_v(buffer_bson.begin(), buffer_bson.end());
+
     for (auto _ : state) {
+
         // This code gets timed
-        deserialization_bson(buffer_bson);
+        bsoncpp::reader::read_from_buffer(buffer_bson.size(), uint8_t_v);
     }
 }
 
@@ -79,15 +64,17 @@ auto BM_test_cbor_deser(benchmark::State &state) {
 
     // Perform setup
 
-    std::ifstream cbor_file("cbor.cbor", std::ios::in);
+    std::ifstream cbor_file("cbor_new.cbor", std::ios::in);
 
     std::string buffer_cbor((std::istreambuf_iterator<char>(cbor_file)),
                             std::istreambuf_iterator<char>());
     cbor_file.close();
 
+    std::vector<unsigned char> un_string(buffer_cbor.begin(), buffer_cbor.end());
+
     for (auto _ : state) {
         // This code gets timed
-        deserialization_cbor(buffer_cbor);
+        cborcpp::reader::read_from_buffer(buffer_cbor.size(), un_string);
     }
 }
 
@@ -95,17 +82,21 @@ auto BM_test_cbor_ser(benchmark::State &state) {
 
     // Perform setup
 
-    std::ifstream cbor_file("cbor.cbor", std::ios::in);
+    std::ifstream cbor_file("cbor_new.cbor", std::ios::in);
 
     std::string buffer_cbor((std::istreambuf_iterator<char>(cbor_file)),
                             std::istreambuf_iterator<char>());
     cbor_file.close();
 
-    auto item = deserialization_cbor(buffer_cbor);
+    std::vector<unsigned char> un_string(buffer_cbor.begin(), buffer_cbor.end());
+
+    auto item = cborcpp::reader::read_from_buffer(buffer_cbor.size(), un_string);
+
+    auto size = cbor_string_length(item);
 
     for (auto _ : state) {
         // This code gets timed
-        serialization_cbor(item);
+        cborcpp::writer::write_to_buffer(item, size);
     }
 
     cbor_decref(&item);

@@ -8,31 +8,32 @@
 #include <cbor.h>
 #include <iostream>
 #include <memory>
+#include <cassert>
 
 namespace cborcpp {
 
     class reader {
 
     public:
-        static auto read_from_buffer(const std::string &buffer) {
 
-            struct cbor_load_result result{};
+        static auto read_from_buffer(size_t length, std::vector<unsigned char> &un_string) {
 
-            return cbor_load(reinterpret_cast<const unsigned char *>(buffer.data()),
-                             buffer.size(), &result);
+            struct cbor_load_result result;
+
+            return cbor_load(&un_string[0], length, &result);
         }
     };
+
 
     class writer {
 
     public:
-        static auto write_to_buffer(const cbor_item_t *item) {
 
-            std::string buffer;
+        static auto write_to_buffer(cbor_item_t *item, size_t size) {
 
-            cbor_serialize(item, reinterpret_cast<unsigned char *>(buffer.data()),
-                           buffer.size());
-            return buffer;
+            unsigned char buffer[size];
+
+            return cbor_serialize(item, buffer, size);
         }
     };
 }
