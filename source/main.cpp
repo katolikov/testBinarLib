@@ -16,10 +16,13 @@ auto BM_test_msg_deser(benchmark::State &state) {
                            std::istreambuf_iterator<char>());
     msgpack_file.close();
 
+    auto buffer = msgpackcpp::writer::write_to_buffer(
+            msgpack::type::tuple<std::string>(buffer_msg.data()));
+
     for (auto _ : state) {
 
         // This code gets timed
-        msgpackcpp::reader::read_from_buffer(buffer_msg);
+        msgpackcpp::reader::read_from_buffer(buffer.str());
     }
 }
 
@@ -73,6 +76,7 @@ auto BM_test_cbor_deser(benchmark::State &state) {
     std::vector<unsigned char> un_string(buffer_cbor.begin(), buffer_cbor.end());
 
     for (auto _ : state) {
+
         // This code gets timed
         cborcpp::reader::read_from_buffer(buffer_cbor.size(), un_string);
     }
