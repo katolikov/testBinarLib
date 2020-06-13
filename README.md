@@ -22,22 +22,22 @@ Test **deserialization**
 ```
 DESERILIZATION: 
 FORMAT FILE: messagepack
-FILE SIZE: 3 mb
+FILE SIZE: 100 mb
 -------------------------------------------------------------
 Benchmark                   Time             CPU   Iterations
 -------------------------------------------------------------
-BM_test_msg_deser     1550843 ns      1525876 ns          671
+BM_test_msg_deser   181395555 ns    102752333 ns            6
 ```
 
 Test **serialization**
 ```
 SERILIZATION: 
 FORMAT FILE: messagepack 
-FILE SIZE: 3 mb
+FILE SIZE: 100 mb
 -------------------------------------------------------------
 Benchmark                   Time             CPU   Iterations
 -------------------------------------------------------------
-BM_test_msg_ser      29275885 ns     28191360 ns           25
+BM_test_msg_ser    2403917679 ns   1270791000 ns            1
 ```
 
 ### TEST №2
@@ -46,11 +46,11 @@ Test **deserialization**
 ```
 DESERILIZATION:
 FORMAT FILE: bson 
-FILE SIZE: 3 mb
+FILE SIZE: 100 mb
 -------------------------------------------------------------
 Benchmark                   Time             CPU   Iterations
 -------------------------------------------------------------
-BM_test_bson_deser   22192522 ns     21599294 ns           34
+BM_test_bson_deser  470650786 ns    393687500 ns            2
 ```
 
 ### TEST №3
@@ -59,21 +59,21 @@ Test **deserialization**
 ```
 DESERILIZATION:
 FORMAT FILE: cbor 
-FILE SIZE: 3 mb
+FILE SIZE: 100 mb
 -------------------------------------------------------------
 Benchmark                   Time             CPU   Iterations
 -------------------------------------------------------------
-BM_test_cbor_deser        174 ns          170 ns      4653791
+BM_test_cbor_deser 2146659555 ns   1926654000 ns            1
 ```
 
 Test **serialization**
 ```
 SERILIZATION:
 FORMAT FILE: cbor
-FILE SIZE: 3 mb
+FILE SIZE: 100 mb
 -------------------------------------------------------------
 Benchmark                   Time             CPU   Iterations
 -------------------------------------------------------------
-BM_test_cbor_ser         28.8 ns         27.7 ns     29851637
+BM_test_cbor_ser   1689037313 ns    687010000 ns            1
 
 ```

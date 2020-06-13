@@ -26,14 +26,16 @@ namespace cborcpp {
 
 
     class writer {
-
     public:
+        static auto write_to_buffer(cbor_item_t *item) {
 
-        static auto write_to_buffer(cbor_item_t *item, size_t size) {
+            uint8_t *buffer;
 
-            unsigned char buffer[size];
+            size_t buffer_size = cbor_serialize_alloc(item, &buffer, &buffer_size);
 
-            return cbor_serialize(item, buffer, size);
+            buffer = nullptr;
+
+            delete buffer;
         }
     };
 }

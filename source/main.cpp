@@ -10,7 +10,7 @@ auto BM_test_msg_deser(benchmark::State &state) {
 
     // Perform setup
 
-    std::ifstream msgpack_file("msgpack_2.msgpack", std::ios::in);
+    std::ifstream msgpack_file("msgpack_new_100.msgpack", std::ios::in);
 
     std::string buffer_msg((std::istreambuf_iterator<char>(msgpack_file)),
                            std::istreambuf_iterator<char>());
@@ -27,7 +27,7 @@ auto BM_test_msg_ser(benchmark::State &state) {
 
     // Perform setup
 
-    std::ifstream msgpack_file("msgpack_2.msgpack", std::ios::in);
+    std::ifstream msgpack_file("msgpack_new_100.msgpack", std::ios::in);
 
     std::string buffer_msg((std::istreambuf_iterator<char>(msgpack_file)),
                            std::istreambuf_iterator<char>());
@@ -53,7 +53,7 @@ auto BM_test_bson_deser(benchmark::State &state) {
 
     // Perform setup
 
-    std::ifstream bson_file("bson_2.bson", std::ios::in);
+    std::ifstream bson_file("bson_new_100.bson", std::ios::in);
 
     std::string buffer_bson((std::istreambuf_iterator<char>(bson_file)),
                             std::istreambuf_iterator<char>());
@@ -72,7 +72,7 @@ auto BM_test_cbor_deser(benchmark::State &state) {
 
     // Perform setup
 
-    std::ifstream cbor_file("cbor_2.cbor", std::ios::in);
+    std::ifstream cbor_file("cbor_new_100.cbor", std::ios::in);
 
     std::string buffer_cbor((std::istreambuf_iterator<char>(cbor_file)),
                             std::istreambuf_iterator<char>());
@@ -91,7 +91,7 @@ auto BM_test_cbor_ser(benchmark::State &state) {
 
     // Perform setup
 
-    std::ifstream cbor_file("cbor_2.cbor", std::ios::in);
+    std::ifstream cbor_file("cbor_new_100.cbor", std::ios::in);
 
     std::string buffer_cbor((std::istreambuf_iterator<char>(cbor_file)),
                             std::istreambuf_iterator<char>());
@@ -101,11 +101,9 @@ auto BM_test_cbor_ser(benchmark::State &state) {
 
     auto item = cborcpp::reader::read_from_buffer(buffer_cbor.size(), un_string);
 
-    auto size = cbor_string_length(item);
-
     for (auto _ : state) {
         // This code gets timed
-        cborcpp::writer::write_to_buffer(item, size);
+        cborcpp::writer::write_to_buffer(item);
     }
 
     cbor_decref(&item);
