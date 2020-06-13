@@ -8,7 +8,7 @@
 #include <cbor.h>
 #include <iostream>
 #include <memory>
-#include <cassert>
+
 
 namespace cborcpp {
 
@@ -16,7 +16,7 @@ namespace cborcpp {
 
     public:
 
-        static auto read_from_buffer(size_t length, std::vector<unsigned char> &un_string) {
+        static auto read_from_buffer(size_t length, std::vector<const uint8_t> &un_string) {
 
             struct cbor_load_result result;
 

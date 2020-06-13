@@ -10,19 +10,16 @@ auto BM_test_msg_deser(benchmark::State &state) {
 
     // Perform setup
 
-    std::ifstream msgpack_file("msgpack_new.msgpack", std::ios::in);
+    std::ifstream msgpack_file("msgpack_2.msgpack", std::ios::in);
 
     std::string buffer_msg((std::istreambuf_iterator<char>(msgpack_file)),
                            std::istreambuf_iterator<char>());
     msgpack_file.close();
 
-    auto buffer = msgpackcpp::writer::write_to_buffer(
-            msgpack::type::tuple<std::string>(buffer_msg.data()));
-
     for (auto _ : state) {
 
         // This code gets timed
-        msgpackcpp::reader::read_from_buffer(buffer.str());
+        msgpackcpp::reader::read_from_buffer(buffer_msg);
     }
 }
 
@@ -30,17 +27,25 @@ auto BM_test_msg_ser(benchmark::State &state) {
 
     // Perform setup
 
-    std::ifstream msgpack_file("msgpack_new.msgpack", std::ios::in);
+    std::ifstream msgpack_file("msgpack_2.msgpack", std::ios::in);
 
     std::string buffer_msg((std::istreambuf_iterator<char>(msgpack_file)),
                            std::istreambuf_iterator<char>());
     msgpack_file.close();
 
+    auto oh = msgpackcpp::reader::read_from_buffer(buffer_msg);
+
+    auto deserialization = oh.get();
+
+    std::stringstream buffer;
+
+    buffer << deserialization;
+
     for (auto _ : state) {
 
         // This code gets timed
         msgpackcpp::writer::write_to_buffer(
-                msgpack::type::tuple<std::string>(buffer_msg.data()));
+                msgpack::type::tuple<std::string>(buffer.str().data()));
     }
 }
 
@@ -48,7 +53,7 @@ auto BM_test_bson_deser(benchmark::State &state) {
 
     // Perform setup
 
-    std::ifstream bson_file("bson_new.bson", std::ios::in);
+    std::ifstream bson_file("bson_2.bson", std::ios::in);
 
     std::string buffer_bson((std::istreambuf_iterator<char>(bson_file)),
                             std::istreambuf_iterator<char>());
@@ -67,13 +72,13 @@ auto BM_test_cbor_deser(benchmark::State &state) {
 
     // Perform setup
 
-    std::ifstream cbor_file("cbor_new.cbor", std::ios::in);
+    std::ifstream cbor_file("cbor_2.cbor", std::ios::in);
 
     std::string buffer_cbor((std::istreambuf_iterator<char>(cbor_file)),
                             std::istreambuf_iterator<char>());
     cbor_file.close();
 
-    std::vector<unsigned char> un_string(buffer_cbor.begin(), buffer_cbor.end());
+    std::vector<const uint8_t> un_string(buffer_cbor.begin(), buffer_cbor.end());
 
     for (auto _ : state) {
 
@@ -86,13 +91,13 @@ auto BM_test_cbor_ser(benchmark::State &state) {
 
     // Perform setup
 
-    std::ifstream cbor_file("cbor_new.cbor", std::ios::in);
+    std::ifstream cbor_file("cbor_2.cbor", std::ios::in);
 
     std::string buffer_cbor((std::istreambuf_iterator<char>(cbor_file)),
                             std::istreambuf_iterator<char>());
     cbor_file.close();
 
-    std::vector<unsigned char> un_string(buffer_cbor.begin(), buffer_cbor.end());
+    std::vector<const uint8_t> un_string(buffer_cbor.begin(), buffer_cbor.end());
 
     auto item = cborcpp::reader::read_from_buffer(buffer_cbor.size(), un_string);
 
