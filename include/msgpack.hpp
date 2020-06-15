@@ -28,7 +28,7 @@ namespace msgpackcpp {
     class writer {
 
     public:
-        static auto write_to_buffer(const msgpack::type::tuple<std::string> &wrt) {
+        static auto write_to_buffer(const msgpack::type::tuple<msgpack::object> &wrt) {
 
             std::stringstream buffer_out;
 

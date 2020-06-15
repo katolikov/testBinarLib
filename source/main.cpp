@@ -10,16 +10,13 @@ auto BM_test_msg_deser(benchmark::State &state) {
 
     // Perform setup
 
-    std::ifstream msgpack_file("msgpack_new_100.msgpack", std::ios::in);
+    std::ifstream msgpack_file("msgpack_new_100.msgpack", std::ios::in | std::ios::binary);
 
     std::string buffer_msg((std::istreambuf_iterator<char>(msgpack_file)),
                            std::istreambuf_iterator<char>());
-    msgpack_file.close();
-
     for (auto _ : state) {
-
         // This code gets timed
-        msgpackcpp::reader::read_from_buffer(buffer_msg);
+        benchmark::DoNotOptimize(msgpackcpp::reader::read_from_buffer(buffer_msg));
     }
 }
 
@@ -27,25 +24,15 @@ auto BM_test_msg_ser(benchmark::State &state) {
 
     // Perform setup
 
-    std::ifstream msgpack_file("msgpack_new_100.msgpack", std::ios::in);
+    std::ifstream msgpack_file("msgpack_new_100.msgpack", std::ios::in | std::ios::binary);
 
     std::string buffer_msg((std::istreambuf_iterator<char>(msgpack_file)),
                            std::istreambuf_iterator<char>());
-    msgpack_file.close();
-
     auto oh = msgpackcpp::reader::read_from_buffer(buffer_msg);
-
-    auto deserialization = oh.get();
-
-    std::stringstream buffer;
-
-    buffer << deserialization;
-
     for (auto _ : state) {
-
         // This code gets timed
-        msgpackcpp::writer::write_to_buffer(
-                msgpack::type::tuple<std::string>(buffer.str().data()));
+        benchmark::DoNotOptimize(msgpackcpp::writer::write_to_buffer(
+                msgpack::type::tuple<msgpack::object>(oh.get())));
     }
 }
 
@@ -53,18 +40,23 @@ auto BM_test_bson_deser(benchmark::State &state) {
 
     // Perform setup
 
-    std::ifstream bson_file("bson_new_100.bson", std::ios::in);
+    std::ifstream bson_file("bson_new_100.bson", std::ios::in | std::ios::binary);
 
-    std::string buffer_bson((std::istreambuf_iterator<char>(bson_file)),
-                            std::istreambuf_iterator<char>());
-    bson_file.close();
-
-    std::vector<const uint8_t> uint8_t_v(buffer_bson.begin(), buffer_bson.end());
-
-    for (auto _ : state) {
-
-        // This code gets timed
-        bsoncpp::reader::read_from_buffer(buffer_bson.size(), uint8_t_v);
+    std::vector<uint8_t> uint8_t_v((std::istreambuf_iterator<char>(bson_file)),
+                                   std::istreambuf_iterator<char>());
+    bson_reader_t *reader;
+    try {
+        for (auto _ : state) {
+            // This code gets timed
+            benchmark::DoNotOptimize(reader = bsoncpp::reader::read_from_buffer(uint8_t_v));
+            state.PauseTiming();
+            bson_reader_destroy(reader);
+            state.ResumeTiming();
+        }
+    }
+    catch (std::invalid_argument &e) {
+        std::cerr << e.what() << "\n";
+        exit(1);
     }
 }
 
@@ -72,18 +64,23 @@ auto BM_test_cbor_deser(benchmark::State &state) {
 
     // Perform setup
 
-    std::ifstream cbor_file("cbor_new_100.cbor", std::ios::in);
+    std::ifstream cbor_file("cbor_new_100.cbor", std::ios::in | std::ios::binary);
 
-    std::string buffer_cbor((std::istreambuf_iterator<char>(cbor_file)),
-                            std::istreambuf_iterator<char>());
-    cbor_file.close();
-
-    std::vector<const uint8_t> un_string(buffer_cbor.begin(), buffer_cbor.end());
-
-    for (auto _ : state) {
-
-        // This code gets timed
-        cborcpp::reader::read_from_buffer(buffer_cbor.size(), un_string);
+    std::vector<uint8_t> uint8_t_v((std::istreambuf_iterator<char>(cbor_file)),
+                                   std::istreambuf_iterator<char>());
+    cbor_item_t *item;
+    try {
+        for (auto _ : state) {
+            // This code gets timed
+            benchmark::DoNotOptimize(item = cborcpp::reader::read_from_buffer(uint8_t_v));
+            state.PauseTiming();
+            cbor_decref(&item);
+            state.ResumeTiming();
+        }
+    }
+    catch (std::invalid_argument &e) {
+        std::cerr << e.what() << "\n";
+        exit(1);
     }
 }
 
@@ -91,23 +88,26 @@ auto BM_test_cbor_ser(benchmark::State &state) {
 
     // Perform setup
 
-    std::ifstream cbor_file("cbor_new_100.cbor", std::ios::in);
+    std::ifstream cbor_file("cbor_new_100.cbor", std::ios::in | std::ios::binary);
 
-    std::string buffer_cbor((std::istreambuf_iterator<char>(cbor_file)),
-                            std::istreambuf_iterator<char>());
-    cbor_file.close();
-
-    std::vector<const uint8_t> un_string(buffer_cbor.begin(), buffer_cbor.end());
-
-    auto item = cborcpp::reader::read_from_buffer(buffer_cbor.size(), un_string);
-
-    for (auto _ : state) {
-        // This code gets timed
-        cborcpp::writer::write_to_buffer(item);
+    std::vector<uint8_t> uint8_t_v((std::istreambuf_iterator<char>(cbor_file)),
+                                   std::istreambuf_iterator<char>());
+    std::shared_ptr<cbor_item_t *> item;
+    uint8_t *buffer;
+    try {
+        item = std::make_shared<cbor_item_t *>(cborcpp::reader::read_from_buffer(uint8_t_v));
+        for (auto _ : state) {
+            // This code gets timed
+            benchmark::DoNotOptimize(buffer = cborcpp::writer::write_to_buffer(item));
+            state.PauseTiming();
+            free(buffer);
+            state.ResumeTiming();
+        }
     }
-
-    cbor_decref(&item);
-
+    catch (std::invalid_argument &e) {
+        std::cerr << e.what() << "\n";
+        exit(1);
+    }
 }
 
 // Register the function as a benchmark
