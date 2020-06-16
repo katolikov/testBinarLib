@@ -45,10 +45,12 @@ auto BM_test_bson_deser(benchmark::State &state) {
     std::vector<uint8_t> uint8_t_v((std::istreambuf_iterator<char>(bson_file)),
                                    std::istreambuf_iterator<char>());
     bson_reader_t *reader;
+
     try {
         for (auto _ : state) {
             // This code gets timed
             benchmark::DoNotOptimize(reader = bsoncpp::reader::read_from_buffer(uint8_t_v));
+
             state.PauseTiming();
             bson_reader_destroy(reader);
             state.ResumeTiming();
@@ -69,10 +71,12 @@ auto BM_test_cbor_deser(benchmark::State &state) {
     std::vector<uint8_t> uint8_t_v((std::istreambuf_iterator<char>(cbor_file)),
                                    std::istreambuf_iterator<char>());
     cbor_item_t *item;
+
     try {
         for (auto _ : state) {
             // This code gets timed
             benchmark::DoNotOptimize(item = cborcpp::reader::read_from_buffer(uint8_t_v));
+
             state.PauseTiming();
             cbor_decref(&item);
             state.ResumeTiming();
@@ -92,13 +96,15 @@ auto BM_test_cbor_ser(benchmark::State &state) {
 
     std::vector<uint8_t> uint8_t_v((std::istreambuf_iterator<char>(cbor_file)),
                                    std::istreambuf_iterator<char>());
-    std::shared_ptr<cbor_item_t *> item;
     uint8_t *buffer;
+
     try {
-        item = std::make_shared<cbor_item_t *>(cborcpp::reader::read_from_buffer(uint8_t_v));
+        auto item = std::make_shared<cbor_item_t *>(cborcpp::reader::read_from_buffer(uint8_t_v));
+
         for (auto _ : state) {
             // This code gets timed
             benchmark::DoNotOptimize(buffer = cborcpp::writer::write_to_buffer(item));
+
             state.PauseTiming();
             free(buffer);
             state.ResumeTiming();
