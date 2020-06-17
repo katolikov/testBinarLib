@@ -17,63 +17,32 @@ Load Average: 1.85, 2.39, 3.10
 ```
 
 ### TEST №1
-### msgpack
 Test **deserialization**
 ```
 DESERILIZATION: 
-FORMAT FILE: messagepack
+FORMAT FILE 1: messagepack
+FORMAT FILE 2: bson
+FORMAT FILE 3: cbor
 FILE SIZE: 100 mb
--------------------------------------------------------------
-Benchmark                   Time             CPU   Iterations
--------------------------------------------------------------
-BM_test_msg_deser    88057199 ns     79926000 ns            9
-```
+----------------------------------------------------------------
+Benchmark                   Time             CPU      Iterations
+----------------------------------------------------------------
+1. BM_test_msg_deser    88057199 ns     79926000 ns            9
+2. BM_test_bson_deser  464641318 ns    422559000 ns            2
+3. BM_test_cbor_deser 2170780630 ns   1902517000 ns            1
 
+```
+### TEST №2
 Test **serialization**
 ```
 SERILIZATION: 
-FORMAT FILE: messagepack 
+FORMAT FILE 1: messagepack
+FORMAT FILE 2: cbor
 FILE SIZE: 100 mb
--------------------------------------------------------------
-Benchmark                   Time             CPU   Iterations
--------------------------------------------------------------
-BM_test_msg_ser      68268596 ns     60745833 ns           12
-```
-
-### TEST №2
-### libbson
-Test **deserialization**
-```
-DESERILIZATION:
-FORMAT FILE: bson 
-FILE SIZE: 100 mb
--------------------------------------------------------------
-Benchmark                   Time             CPU   Iterations
--------------------------------------------------------------
-BM_test_bson_deser  464641318 ns    422559000 ns            2
-```
-
-### TEST №3
-### libcbor
-Test **deserialization**
-```
-DESERILIZATION:
-FORMAT FILE: cbor 
-FILE SIZE: 100 mb
--------------------------------------------------------------
-Benchmark                   Time             CPU   Iterations
--------------------------------------------------------------
-BM_test_cbor_deser 2170780630 ns   1902517000 ns            1
-```
-
-Test **serialization**
-```
-SERILIZATION:
-FORMAT FILE: cbor
-FILE SIZE: 100 mb
--------------------------------------------------------------
-Benchmark                   Time             CPU   Iterations
--------------------------------------------------------------
-BM_test_cbor_ser    901093079 ns    511093000 ns            1
+----------------------------------------------------------------
+Benchmark                   Time             CPU      Iterations
+----------------------------------------------------------------
+1. BM_test_msg_ser      68268596 ns     60745833 ns           12
+2. BM_test_cbor_ser    901093079 ns    511093000 ns            1
 
 ```

@@ -58,7 +58,6 @@ auto BM_test_bson_deser(benchmark::State &state) {
     }
     catch (std::invalid_argument &e) {
         std::cerr << e.what() << "\n";
-        exit(1);
     }
 }
 
@@ -84,7 +83,6 @@ auto BM_test_cbor_deser(benchmark::State &state) {
     }
     catch (std::invalid_argument &e) {
         std::cerr << e.what() << "\n";
-        exit(1);
     }
 }
 
@@ -112,7 +110,6 @@ auto BM_test_cbor_ser(benchmark::State &state) {
     }
     catch (std::invalid_argument &e) {
         std::cerr << e.what() << "\n";
-        exit(1);
     }
 }
 
